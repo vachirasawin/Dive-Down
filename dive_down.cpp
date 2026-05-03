@@ -43,6 +43,19 @@ vector<finDetails> fins = {
     {"Graveyard Fins", 61.32}, {"Dinosaur Fins", 66.64}
 };
 
+struct zoneDetails {
+    string zoneName;
+    float zoneValue;
+};
+vector<zoneDetails> zones = {
+    {"Sunlight Zone", 48}, {"Coral Reef", 112}, {"Twilight Zone", 200},
+    {"Deep Ocean", 310}, {"The Deep Dark", 580}, {"The Trenches", 700},
+    {"Atlantis", 760}, {"Aqua Forest", 860}, {"Shell Reef", 960},
+    {"Kraken World", 1080}, {"Megalodon Lair", 1200}, {"Ice Area", 1300},
+    {"Jelly Field", 1440}, {"Steampunk Zone", 1580}, {"Dead Waters", 1700},
+    {"Pre-Historic", 1830}
+};
+
 int main() {
     for (int i = 0; i < weights.size(); i++) cout << i + 1 << ") " << weights[i].weightName << endl;
     for (int i = 0; i < 20; i++) cout << "-";
@@ -62,8 +75,11 @@ int main() {
     int curr_fin; cin >> curr_fin; curr_fin--;
     for (int i = 0; i < 20; i++) cout << "-"; cout << endl;
 
-    cout << "Target depth: ";
-    int target_depth; cin >> target_depth;
+    for (int i = 0; i < zones.size(); i++) cout << i + 1 << ") " << zones[i].zoneName << endl;
+    for (int i = 0; i < 20; i++) cout << "-";
+    cout << "\nTarget zone: ";
+    int target_zone; cin >> target_zone; target_zone--;
+    float target_depth = zones[target_zone].zoneValue;
     for (int i = 0; i < 20; i++) cout << "-"; cout << endl;
 
     float downTime = target_depth / weights[curr_weight].weightValue;
