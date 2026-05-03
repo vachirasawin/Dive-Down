@@ -1,10 +1,9 @@
 #include <bits/stdc++.h>
 using namespace std;
 
-struct weightDetails {
-    string weightName;
-    float weightValue;
-};
+#include <conio.h>
+
+struct weightDetails { string name; float value; };
 vector<weightDetails> weights = {
     {"Brick", 6.44}, {"Dumbbell", 8.4}, {"Plate", 10.64},
     {"Barbell", 13.72}, {"Anvil", 17.36}, {"Anchor", 21.84},
@@ -15,10 +14,7 @@ vector<weightDetails> weights = {
     {"Prehistoric Amber", 96.6}
 };
 
-struct oxygenDetails {
-    string oxygenName;
-    float oxygenValue;
-};
+struct oxygenDetails { string name; float value; };
 vector<oxygenDetails> oxygens = {
     {"Starter Oxygen Tank", 19}, {"Double Oxygen Tank", 24}, {"Aqua Oxygen Tank", 29},
     {"Coral Oxygen Tank", 35}, {"Seaweed Oxygen Tank", 42}, {"Ore Oxygen Tank", 49},
@@ -29,10 +25,7 @@ vector<oxygenDetails> oxygens = {
     {"Steampunk Oxygen Tank", 202}, {"Graveyard Oxygen Tank", 221}, {"Dinosaur Oxygen Tank", 240}
 };
 
-struct finDetails {
-    string finName;
-    float finValue;
-};
+struct finDetails { string name; float value; };
 vector<finDetails> fins = {
     {"Starter Fins", 6.72}, {"Aqua Fins", 8.12}, {"Coral Fins", 9.8},
     {"Seaweed Fins", 11.76}, {"Ore Fins", 14.28}, {"Beach Fins", 17.36},
@@ -43,10 +36,7 @@ vector<finDetails> fins = {
     {"Graveyard Fins", 61.32}, {"Dinosaur Fins", 66.64}
 };
 
-struct zoneDetails {
-    string zoneName;
-    float zoneValue;
-};
+struct zoneDetails { string name; float value; };
 vector<zoneDetails> zones = {
     {"Sunlight Zone", 48}, {"Coral Reef", 112}, {"Twilight Zone", 200},
     {"Deep Ocean", 310}, {"The Deep Dark", 580}, {"The Trenches", 700},
@@ -56,47 +46,74 @@ vector<zoneDetails> zones = {
     {"Pre-Historic", 1830}
 };
 
+template <typename T>
+int selectMenu(string title, const vector<T>& items) {
+    int selected = 0;
+    int n = items.size();
+
+    while (true) {
+        system("cls");
+        cout << "==== " << title << " ====" << endl;
+        cout << "[Arrow Up/Down to Navigate, Enter to Select]" << endl;
+        for (int i = 0; i < 30; i++) cout << "-"; cout << endl;
+
+        for (int i = 0; i < n; i++) {
+            if (i == selected) {
+                cout << " > " << items[i].name << " < " << endl;
+            } else {
+                cout << "   " << items[i].name << endl;
+            }
+        }
+        for (int i = 0; i < 30; i++) cout << "-"; cout << endl;
+
+        int key = _getch();
+        if (key == 224) {
+            key = _getch();
+            if (key == 72) selected = (selected - 1 + n) % n;
+            if (key == 80) selected = (selected + 1) % n;
+        } else if (key == 13) {
+            return selected;
+        }
+    }
+}
+
 int main() {
-    for (int i = 0; i < weights.size(); i++) cout << i + 1 << ") " << weights[i].weightName << endl;
-    for (int i = 0; i < 20; i++) cout << "-";
-    cout << "\nCurrent weight: ";
-    int curr_weight; cin >> curr_weight; curr_weight--;
-    for (int i = 0; i < 20; i++) cout << "-"; cout << endl;
-    
-    for (int i = 0; i < oxygens.size(); i++) cout << i + 1 << ") " << oxygens[i].oxygenName << endl;
-    for (int i = 0; i < 20; i++) cout << "-";
-    cout << "\nCurrent oxygen tank: ";
-    int curr_oxygen; cin >> curr_oxygen; curr_oxygen--;
-    for (int i = 0; i < 20; i++) cout << "-"; cout << endl;
-    
-    for (int i = 0; i < fins.size(); i++) cout << i + 1 << ") " << fins[i].finName << endl;
-    for (int i = 0; i < 20; i++) cout << "-";
-    cout << "\nCurrent fin: ";
-    int curr_fin; cin >> curr_fin; curr_fin--;
-    for (int i = 0; i < 20; i++) cout << "-"; cout << endl;
+    int curr_weight = selectMenu("SELECT CURRENT WEIGHT", weights);
+    int curr_oxygen = selectMenu("SELECT OXYGEN TANK", oxygens);
+    int curr_fin    = selectMenu("SELECT CURRENT FIN", fins);
+    int target_zone = selectMenu("SELECT TARGET ZONE", zones);
 
-    for (int i = 0; i < zones.size(); i++) cout << i + 1 << ") " << zones[i].zoneName << endl;
-    for (int i = 0; i < 20; i++) cout << "-";
-    cout << "\nTarget zone: ";
-    int target_zone; cin >> target_zone; target_zone--;
-    float target_depth = zones[target_zone].zoneValue;
-    for (int i = 0; i < 20; i++) cout << "-"; cout << endl;
+    float target_depth = zones[target_zone].value;
+    float weightVal    = weights[curr_weight].value;
+    float oxygenVal    = oxygens[curr_oxygen].value;
+    float finVal       = fins[curr_fin].value;
 
-    float downTime = target_depth / weights[curr_weight].weightValue;
-    float downPercentage = downTime / (oxygens[curr_oxygen].oxygenValue / 100);
-    float upTime = target_depth / fins[curr_fin].finValue;
-    float upPercentage = upTime / (oxygens[curr_oxygen].oxygenValue / 100);
-    float catchTime = oxygens[curr_oxygen].oxygenValue - (downTime + upTime);
-    float catchPercentage = catchTime / (oxygens[curr_oxygen].oxygenValue / 100);
+    float downTime       = target_depth / weightVal;
+    float downPercentage = downTime / (oxygenVal / 100);
+    float upTime         = target_depth / finVal;
+    float upPercentage   = upTime / (oxygenVal / 100);
+    float catchTime      = oxygenVal - (downTime + upTime);
+    float catchPercentage = catchTime / (oxygenVal / 100);
 
-    cout << "Go down for " << downTime << "s - " << downPercentage << "%" << endl;
-    cout << "Catching for " << catchTime << "s - " << catchPercentage << "%" << endl;
-    cout << "Go up for " << upTime << "s - " << upPercentage << "%" << endl;
-    for (int i = 0; i < 20; i++) cout << "-"; cout << endl;
+    system("cls");
+    cout << "========= SUMMARY =========" << endl;
+    cout << "Weight : " << weights[curr_weight].name << endl;
+    cout << "Oxygen : " << oxygens[curr_oxygen].name << endl;
+    cout << "Fin    : " << fins[curr_fin].name << endl;
+    cout << "Target : " << zones[target_zone].name << " (" << target_depth << "m)" << endl;
+    for (int i = 0; i < 27; i++) cout << "-"; cout << endl;
 
-    cout << "Must reach the target depth at " << 100 - downPercentage << "%" << endl;
-    cout << "Must stop catching at " << upPercentage << "%" << endl;
-    for (int i = 0; i < 20; i++) cout << "-"; cout << endl;
+    cout << "Go down for      : " << downTime << "s (" << downPercentage << "%)" << endl;
+    cout << "Catching for     : " << catchTime << "s (" << catchPercentage << "%)" << endl;
+    cout << "Go up for        : " << upTime << "s (" << upPercentage << "%)" << endl;
+    for (int i = 0; i < 27; i++) cout << "-"; cout << endl;
+
+    cout << "Must reach target at   : " << 100 - downPercentage << "%" << endl;
+    cout << "Must stop catching at  : " << upPercentage << "%" << endl;
+    for (int i = 0; i < 27; i++) cout << "-"; cout << endl;
+
+    cout << "\nPress any key to exit...";
+    _getch();
 
     return 0;
 };
